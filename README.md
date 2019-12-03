@@ -1,2 +1,2 @@
 # jsequencer
-A small 16-step sequencer based on the Teensy 3.1.
+A small 16-step midi sequencer based on the Teensy 3.1.
