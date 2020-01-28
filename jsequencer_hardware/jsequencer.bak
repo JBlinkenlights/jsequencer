@@ -1,5 +1,5 @@
 EESchema Schematic File Version 4
-LIBS:teensy_sequencer-cache
+LIBS:jsequencer-cache
 EELAYER 29 0
 EELAYER END
 $Descr A4 11693 8268
@@ -311,7 +311,7 @@ Wire Wire Line
 Text Label 7500 4350 0    79   ~ 0
 PlayPause
 $Comp
-L teensy_seq:Teensy_3_1 U1
+L jsequencer-rescue:Teensy_3_1-teensy_seq U1
 U 1 1 5DE8E8E7
 P 3600 5350
 F 0 "U1" H 3350 4650 50  0000 L CNN

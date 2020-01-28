@@ -68,42 +68,11 @@ X 4 4 200 -200 100 L 50 50 0 1 P
 ENDDRAW
 ENDDEF
 #
-# power_+5V
+# jsequencer-rescue_Teensy_3_1-teensy_seq
 #
-DEF power_+5V #PWR 0 0 Y Y 1 F P
-F0 "#PWR" 0 -150 50 H I C CNN
-F1 "power_+5V" 0 140 50 H V C CNN
-F2 "" 0 0 50 H I C CNN
-F3 "" 0 0 50 H I C CNN
-DRAW
-P 2 0 1 0 -30 50 0 100 N
-P 2 0 1 0 0 0 0 100 N
-P 2 0 1 0 0 100 30 50 N
-X +5V 1 0 0 0 U 50 50 1 1 W N
-ENDDRAW
-ENDDEF
-#
-# power_GNDREF
-#
-DEF power_GNDREF #PWR 0 0 Y Y 1 F P
-F0 "#PWR" 0 -250 50 H I C CNN
-F1 "power_GNDREF" 0 -150 50 H V C CNN
-F2 "" 0 0 50 H I C CNN
-F3 "" 0 0 50 H I C CNN
-DRAW
-P 2 0 1 0 -25 -75 25 -75 N
-P 2 0 1 0 -5 -100 5 -100 N
-P 2 0 1 0 0 -50 0 0 N
-P 2 0 1 0 50 -50 -50 -50 N
-X GNDREF 1 0 0 0 D 50 50 1 1 W N
-ENDDRAW
-ENDDEF
-#
-# teensy_seq_Teensy_3_1
-#
-DEF teensy_seq_Teensy_3_1 U 0 40 Y Y 1 F N
+DEF jsequencer-rescue_Teensy_3_1-teensy_seq U 0 40 Y Y 1 F N
 F0 "U" -200 -700 50 H V C CNN
-F1 "teensy_seq_Teensy_3_1" -50 800 50 H V C CNN
+F1 "jsequencer-rescue_Teensy_3_1-teensy_seq" -50 800 50 H V C CNN
 F2 "" 250 0 50 H I C CNN
 F3 "" 250 0 50 H I C CNN
 DRAW
@@ -136,6 +105,37 @@ X ~ 6 -350 100 100 R 50 50 1 1 I
 X ~ 7 -350 0 100 R 50 50 1 1 I
 X ~ 8 -350 -100 100 R 50 50 1 1 I
 X ~ 9 -350 -200 100 R 50 50 1 1 I
+ENDDRAW
+ENDDEF
+#
+# power_+5V
+#
+DEF power_+5V #PWR 0 0 Y Y 1 F P
+F0 "#PWR" 0 -150 50 H I C CNN
+F1 "power_+5V" 0 140 50 H V C CNN
+F2 "" 0 0 50 H I C CNN
+F3 "" 0 0 50 H I C CNN
+DRAW
+P 2 0 1 0 -30 50 0 100 N
+P 2 0 1 0 0 0 0 100 N
+P 2 0 1 0 0 100 30 50 N
+X +5V 1 0 0 0 U 50 50 1 1 W N
+ENDDRAW
+ENDDEF
+#
+# power_GNDREF
+#
+DEF power_GNDREF #PWR 0 0 Y Y 1 F P
+F0 "#PWR" 0 -250 50 H I C CNN
+F1 "power_GNDREF" 0 -150 50 H V C CNN
+F2 "" 0 0 50 H I C CNN
+F3 "" 0 0 50 H I C CNN
+DRAW
+P 2 0 1 0 -25 -75 25 -75 N
+P 2 0 1 0 -5 -100 5 -100 N
+P 2 0 1 0 0 -50 0 0 N
+P 2 0 1 0 50 -50 -50 -50 N
+X GNDREF 1 0 0 0 D 50 50 1 1 W N
 ENDDRAW
 ENDDEF
 #

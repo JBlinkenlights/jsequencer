@@ -11,6 +11,7 @@
 #define NUM_STEPS 16
 #define VELOCITY 100
 #define CHANNEL 1
+#define MIN_STEP_DELAY 10
 
 // define the step
 struct Step {
@@ -23,7 +24,8 @@ Adafruit_NeoPixel strip(NUM_STEPS, NEOPIXELS_PIN, NEO_GRB + NEO_KHZ800);
 
 // variables
 int step_delay, current_step;
-bool playing;
+unsigned long tempoStartTime, tempoEndTime, lastStepTime;
+bool playing, tempoTimerOn, noteIsOn;
 struct Step sequencer[NUM_STEPS];
 
 void set_step(int i, int note, int vel) {
@@ -33,22 +35,22 @@ void set_step(int i, int note, int vel) {
 
 void set_sequence() {
   // preset sequence
-  set_step(0, 60, 100);
-  set_step(1, 64, 100);
-  set_step(2, 67, 100);
-  set_step(3, 71, 100);
-  set_step(4, 60, 100);
-  set_step(5, 64, 100);
-  set_step(6, 67, 100);
-  set_step(7, 71, 100);
-  set_step(8, 60, 100);
-  set_step(9, 64, 100);
-  set_step(10, 65, 100);
-  set_step(11, 67, 100);
-  set_step(12, 60, 100);
-  set_step(13, 64, 100);
-  set_step(14, 65, 100);
-  set_step(15, 67, 100);
+  set_step(0, 60, VELOCITY);
+  set_step(1, 64, VELOCITY);
+  set_step(2, 67, VELOCITY);
+  set_step(3, 71, VELOCITY);
+  set_step(4, 60, VELOCITY);
+  set_step(5, 64, VELOCITY);
+  set_step(6, 67, VELOCITY);
+  set_step(7, 71, VELOCITY);
+  set_step(8, 60, VELOCITY);
+  set_step(9, 64, VELOCITY);
+  set_step(10, 65, VELOCITY);
+  set_step(11, 67, VELOCITY);
+  set_step(12, 60, VELOCITY);
+  set_step(13, 64, VELOCITY);
+  set_step(14, 65, VELOCITY);
+  set_step(15, 67, VELOCITY);
 }
 
 
@@ -56,43 +58,69 @@ void show_current_step() {
   // show the current step on the neopixels
   strip.clear();
   for(int i = 0; i < NUM_STEPS; i++){
-    if(i == current_step) {
-      if(i % 4 == 0) {
-        strip.setPixelColor(i, 0, 96, 0);
+    
+    if(i % 4 == 0){
+      if(i == current_step){
+        strip.setPixelColor(i, 60, 0, 60);
       }
-      else {
-        strip.setPixelColor(i, 0, 0, 96);
+      else if(tempoTimerOn){
+        strip.setPixelColor(i, 0, 60, 0);
       }
+      else{
+        strip.setPixelColor(i, 0, 0, 60);
+      }
+    }
+    
+    else if(i == current_step){
+      strip.setPixelColor(i, 60, 0, 0);
     }
     else {
       strip.setPixelColor(i, 0, 0, 0);
     }
-  strip.show();
   }
+  strip.show();
 }
 
 void play_pause_button_pressed() {
+  if(playing){
+    step_off();
+  }
   playing = !playing; // toggle play/pause
 }
 
 void step_button_pressed() {
   if(playing == false) {
     step_ahead();
-    play_step();
+    autoplay_step();
+  }
+  else {
+    if(tempoTimerOn == false)
+    {
+      tempoStartTime = millis();
+      tempoTimerOn = true;
+    }
+    else
+    {
+        tempoEndTime = millis();
+        tempoTimerOn = false;
+        if(tempoEndTime - tempoStartTime >= MIN_STEP_DELAY){
+          step_delay = int((tempoEndTime - tempoStartTime) / 4);
+        }
+    }
   }
 }
 
 void note_up_button_pressed() {
   if(playing == false) {
     sequencer[current_step].note = sequencer[current_step].note + 1;
-    play_step();
+    autoplay_step();
   }
 }
 
 void note_down_button_pressed() {
   if(playing == false) {
     sequencer[current_step].note = sequencer[current_step].note - 1;
-    play_step();
+    autoplay_step();
   }
 }
 
@@ -103,16 +131,18 @@ void step_ahead() {
       current_step = 0;
 }
 
-void play_step() {
-  // send note on
-    usbMIDI.sendNoteOn(sequencer[current_step].note, VELOCITY, CHANNEL);
-    delay(step_delay / 2);
+void autoplay_step(){
+  step_on();
+  delay(step_delay);
+  step_off();
+}
 
-    show_current_step();
+void step_on(){
+  usbMIDI.sendNoteOn(sequencer[current_step].note, VELOCITY, CHANNEL);
+}
 
-    // send note off
-    usbMIDI.sendNoteOff(sequencer[current_step].note, VELOCITY, CHANNEL);
-    delay(step_delay / 2);
+void step_off(){
+  usbMIDI.sendNoteOff(sequencer[current_step].note, VELOCITY, CHANNEL);
 }
 
 void setup() {
@@ -133,16 +163,26 @@ void setup() {
   set_sequence();
 
   step_delay = 100; // step delay in ms
+  lastStepTime = millis();
   current_step = 0;
   playing = true;
+  tempoTimerOn = false;
+  noteIsOn = false;
 }
 
 void loop() {
 
   if(playing == true) {
-    step_ahead();
-    play_step();
+    if(millis() > lastStepTime + step_delay){
+      lastStepTime = millis();
+      step_ahead();
+      step_on();
+    }
+    else if(millis() > lastStepTime + (step_delay / 2)){
+      step_off();
+    }
   }
+  show_current_step();
   
   while(usbMIDI.read()) {} // ignore incoming MIDI messages
   
