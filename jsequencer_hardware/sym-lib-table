@@ -1,0 +1,4 @@
+(sym_lib_table
+  (lib (name teensy_seq)(type Legacy)(uri ${KIPRJMOD}/teensy_seq.lib)(options "")(descr ""))
+  (lib (name jsequencer-rescue)(type Legacy)(uri ${KIPRJMOD}/jsequencer-rescue.lib)(options "")(descr ""))
+)
